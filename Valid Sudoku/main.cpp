@@ -4,6 +4,18 @@
 #include<iostream>
 #include<vector>
 #include<map>
+#include<utility>
+
+
+bool helper(std::vector<std::pair<int,char>> up, std::vector<std::vector<char>>& board,int row , int column) {
+	for (auto& i : up){
+		if (i.first == column && i.second == board[row][column]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 
 bool isValidSudoku(std::vector<std::vector<char>>& board) {
 	//variables 
@@ -12,25 +24,30 @@ bool isValidSudoku(std::vector<std::vector<char>>& board) {
 	std::map<char, int> gridone;
 	std::map<char, int> gridtwo;
 	std::map<char, int> gridthree;
+	std::vector<std::pair<int, char>> up;
+
+
+	//check for the rows
+	for (size_t i = 0; i < board.size(); i++) {
+		for (size_t j = 0; j < board[i].size(); j++) {
+			if (board[i][j] != '.') {
+				if (!up.empty() && !helper(up, board, i, j)) {
+					return false;
+				}
+				
+			     up.push_back(std::make_pair(j, board[i][j]));
+				
+			}
+		}
+	}
+
+
 
 	//loop through the board
 	for (size_t i = 0; i < board.size(); i++) {
 		for (size_t j = 0; j < board[i].size(); j++) {
 			//check for board that is filled with a number
 			if (isalnum(board[i][j])) {
-				//1.keep track of the numbers in the row that appear
-				if (i == j){
-					//if we havent seen this value go 
-					//ahead and insert it
-					if (row.find(board[i][j]) == row.end()) {
-						row.insert({ board[i][j] ,1});
-					}
-					//if we seen this  it brakes the sudoku and return false
-					else {
-						return false;
-					}
-				}
-
 				//2. keep track of the numbers in the column section
 				//check if we've seen this value in the columns
 				//if not add two the map if we've seen it return false
@@ -118,7 +135,16 @@ bool isValidSudoku(std::vector<std::vector<char>>& board) {
 
 
 int main() {
-	std::vector<std::vector<char>> board = {};
+	std::vector<std::vector<char>> board = { {'.','.','.','.','.','.','.','.','.'},
+											 {'.','.','.','.','.','.','3','.','.'},
+											 {'.','.','.','1','8','.','.','.','.'},
+											 {'.','.','.','7','.','.','.','.','.'},
+											 {'.','.','.','.','1','.','9','7','.'},
+											 {'.','.','.','.','.','.','.','.','.'},
+											 {'.','.','.','3','6','.','1','.','.'},
+											 {'.','.','.','.','.','.','.','.','.'},
+											 {'.','.','.','.','.','.','.','2','.'},
+	};
 
 
 
